@@ -210,7 +210,7 @@ updateAllModels(rgb) {
 - *Problem:* User input could contain incorrect values
 - *Solution:* Added `validateInputValue()` function for boundary value checking
 
-**4. Warning Display**
+**4. Warning Display** 
 - *Problem:* Unobtrusive user notification about adjustments
 - *Solution:* Notification system with automatic hiding after 3 seconds
 
@@ -233,7 +233,9 @@ updateAllModels(rgb) {
 I have chosen to develop a WEB-app because it doesn't requires instalation of some IDE(actually I used VSC for coding) and compilers/.
 
 List of technologies:
-- HTML, CSS, JavaScript
+- HTML5 for cross-browser compatability
+- JavaScript and VSC for coding transformation between color models
+- CSS for design 
 - Deepseek(I used LLM for making app more convinient and well designed(CSS))
 - Obsidian(This README.md written in Obsidian)
 

@@ -14,22 +14,18 @@ class ColorConverter {
         document.querySelectorAll('.input-fields input').forEach(input => {
             input.addEventListener('input', (e) => this.handleInputChange(e));
             input.addEventListener('change', (e) => this.handleInputChange(e));
-            // Добавляем обработчик для ручного ввода и Enter
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     this.handleInputChange(e);
                 }
             });
-            // Добавляем обработчик для Backspace и Delete
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Backspace' || e.key === 'Delete') {
-                    // Разрешаем стандартное поведение для удаления текста
                     setTimeout(() => {
                         this.handleInputChange(e);
                     }, 0);
                 }
             });
-            // Обработчик при потере фокуса
             input.addEventListener('blur', (e) => {
                 this.handleInputChange(e);
             });
@@ -47,28 +43,24 @@ class ColorConverter {
         const model = input.dataset.model;
         const channel = input.dataset.channel;
         
-        // Если поле пустое, не обрабатываем
         if (input.value === '' || input.value === '-') {
             return;
         }
         
         let value = parseFloat(input.value);
         
-        // Если значение не число, восстанавливаем предыдущее
         if (isNaN(value)) {
             const currentValue = this.getCurrentModelValue(model, channel);
             input.value = this.formatValue(currentValue);
             return;
         }
-        
-        // Валидация значений
+    
         value = this.validateInputValue(model, channel, value);
         input.value = value;
         
         this.updateFromModel(model, channel, value);
     }
 
-    // Вспомогательная функция для получения текущего значения
     getCurrentModelValue(model, channel) {
         const slider = document.querySelector(`[data-model="${model}"][data-channel="${channel}"]`);
         return slider ? parseFloat(slider.value) : 0;

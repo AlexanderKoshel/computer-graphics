@@ -10,13 +10,68 @@ class ColorConverter {
         document.querySelectorAll('.slider').forEach(slider => {
             slider.addEventListener('input', (e) => this.handleSliderChange(e));
         });
+        
         document.querySelectorAll('.input-fields input').forEach(input => {
             input.addEventListener('input', (e) => this.handleInputChange(e));
             input.addEventListener('change', (e) => this.handleInputChange(e));
+            // Добавляем обработчик для ручного ввода и Enter
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.handleInputChange(e);
+                }
+            });
+            // Добавляем обработчик для Backspace и Delete
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' || e.key === 'Delete') {
+                    // Разрешаем стандартное поведение для удаления текста
+                    setTimeout(() => {
+                        this.handleInputChange(e);
+                    }, 0);
+                }
+            });
+            // Обработчик при потере фокуса
+            input.addEventListener('blur', (e) => {
+                this.handleInputChange(e);
+            });
         });
+        
         document.getElementById('colorPicker').addEventListener('input', (e) => {
             this.handleColorPickerChange(e);
         });
+    }
+
+    handleInputChange(event) {
+        if (this.updating) return;
+        
+        const input = event.target;
+        const model = input.dataset.model;
+        const channel = input.dataset.channel;
+        
+        // Если поле пустое, не обрабатываем
+        if (input.value === '' || input.value === '-') {
+            return;
+        }
+        
+        let value = parseFloat(input.value);
+        
+        // Если значение не число, восстанавливаем предыдущее
+        if (isNaN(value)) {
+            const currentValue = this.getCurrentModelValue(model, channel);
+            input.value = this.formatValue(currentValue);
+            return;
+        }
+        
+        // Валидация значений
+        value = this.validateInputValue(model, channel, value);
+        input.value = value;
+        
+        this.updateFromModel(model, channel, value);
+    }
+
+    // Вспомогательная функция для получения текущего значения
+    getCurrentModelValue(model, channel) {
+        const slider = document.querySelector(`[data-model="${model}"][data-channel="${channel}"]`);
+        return slider ? parseFloat(slider.value) : 0;
     }
     handleSliderChange(event) {
         if (this.updating) return;
@@ -25,18 +80,6 @@ class ColorConverter {
         const model = slider.dataset.model;
         const channel = slider.dataset.channel;
         const value = parseFloat(slider.value);
-        this.updateFromModel(model, channel, value);
-    }
-    handleInputChange(event) {
-        if (this.updating) return;
-        
-        const input = event.target;
-        const model = input.dataset.model;
-        const channel = input.dataset.channel;
-        let value = parseFloat(input.value);
-        // Валидация значений
-        value = this.validateInputValue(model, channel, value);
-        input.value = value;
         this.updateFromModel(model, channel, value);
     }
     handleColorPickerChange(event) {
@@ -53,7 +96,13 @@ class ColorConverter {
             'hsv': { h: [0, 360], s: [0, 100], v: [0, 100] }
         };
         const [min, max] = limits[model][channel];
-        return Math.max(min, Math.min(max, value));
+        
+        if (value < min || value > max) {
+            this.showWarning(`Значение ${channel.toUpperCase()} в модели ${model.toUpperCase()} вышло за допустимые границы и будет приближено`);
+            return Math.max(min, Math.min(max, value));
+        }
+        
+        return value;
     }
     updateFromModel(model, changedChannel, changedValue) {
         let rgb;
@@ -255,9 +304,7 @@ class ColorConverter {
     }
     updateAllModels(rgb) {
         this.updating = true;
-        // Обновление preview
         this.updateColorPreview(rgb);
-        // Конвертация во все модели
         const cmyk = this.rgbToCMYK(rgb.r, rgb.g, rgb.b);
         const lab = this.rgbToLAB(rgb.r, rgb.g, rgb.b);
         const hsv = this.rgbToHSV(rgb.r, rgb.g, rgb.b);

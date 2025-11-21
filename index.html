@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер цветов - CMYK ↔ LAB ↔ HSV</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Конвертер цветовых моделей</h1>
+            <p>Вариант 5: CMYK ↔ LAB ↔ HSV</p>
+        </header>
+
+        <div class="color-display">
+            <div class="color-preview" id="colorPreview"></div>
+            <div class="color-hex" id="colorHex">#FFFFFF</div>
+        </div>
+
+        <div class="warning" id="warning" style="display: none;">
+            Внимание: некоторые значения были скорректированы для корректного отображения
+        </div>
+
+        <div class="color-picker-section">
+            <h3>Выбор цвета</h3>
+            <input type="color" id="colorPicker" value="#ffffff">
+        </div>
+
+        <div class="models-container">
+            <!-- CMYK модель -->
+            <div class="color-model" id="cmykModel">
+                <h3>CMYK</h3>
+                <div class="sliders">
+                    <div class="slider-group">
+                        <label>C: <span id="cmykCValue">0</span>%</label>
+                        <input type="range" min="0" max="100" value="0" class="slider" data-model="cmyk" data-channel="c">
+                    </div>
+                    <div class="slider-group">
+                        <label>M: <span id="cmykMValue">0</span>%</label>
+                        <input type="range" min="0" max="100" value="0" class="slider" data-model="cmyk" data-channel="m">
+                    </div>
+                    <div class="slider-group">
+                        <label>Y: <span id="cmykYValue">0</span>%</label>
+                        <input type="range" min="0" max="100" value="0" class="slider" data-model="cmyk" data-channel="y">
+                    </div>
+                    <div class="slider-group">
+                        <label>K: <span id="cmykKValue">0</span>%</label>
+                        <input type="range" min="0" max="100" value="0" class="slider" data-model="cmyk" data-channel="k">
+                    </div>
+                </div>
+                <div class="input-fields">
+                    <input type="number" min="0" max="100" value="0" data-model="cmyk" data-channel="c" placeholder="C">
+                    <input type="number" min="0" max="100" value="0" data-model="cmyk" data-channel="m" placeholder="M">
+                    <input type="number" min="0" max="100" value="0" data-model="cmyk" data-channel="y" placeholder="Y">
+                    <input type="number" min="0" max="100" value="0" data-model="cmyk" data-channel="k" placeholder="K">
+                </div>
+            </div>
+
+            <!-- LAB модель -->
+            <div class="color-model" id="labModel">
+                <h3>LAB</h3>
+                <div class="sliders">
+                    <div class="slider-group">
+                        <label>L: <span id="labLValue">100</span></label>
+                        <input type="range" min="0" max="100" value="100" class="slider" data-model="lab" data-channel="l">
+                    </div>
+                    <div class="slider-group">
+                        <label>A: <span id="labAValue">0</span></label>
+                        <input type="range" min="-128" max="127" value="0" class="slider" data-model="lab" data-channel="a">
+                    </div>
+                    <div class="slider-group">
+                        <label>B: <span id="labBValue">0</span></label>
+                        <input type="range" min="-128" max="127" value="0" class="slider" data-model="lab" data-channel="b">
+                    </div>
+                </div>
+                <div class="input-fields">
+                    <input type="number" min="0" max="100" value="100" data-model="lab" data-channel="l" placeholder="L">
+                    <input type="number" min="-128" max="127" value="0" data-model="lab" data-channel="a" placeholder="A">
+                    <input type="number" min="-128" max="127" value="0" data-model="lab" data-channel="b" placeholder="B">
+                </div>
+            </div>
+
+            <!-- HSV модель -->
+            <div class="color-model" id="hsvModel">
+                <h3>HSV</h3>
+                <div class="sliders">
+                    <div class="slider-group">
+                        <label>H: <span id="hsvHValue">0</span>°</label>
+                        <input type="range" min="0" max="360" value="0" class="slider" data-model="hsv" data-channel="h">
+                    </div>
+                    <div class="slider-group">
+                        <label>S: <span id="hsvSValue">0</span>%</label>
+                        <input type="range" min="0" max="100" value="0" class="slider" data-model="hsv" data-channel="s">
+                    </div>
+                    <div class="slider-group">
+                        <label>V: <span id="hsvVValue">100</span>%</label>
+                        <input type="range" min="0" max="100" value="100" class="slider" data-model="hsv" data-channel="v">
+                    </div>
+                </div>
+                <div class="input-fields">
+                    <input type="number" min="0" max="360" value="0" data-model="hsv" data-channel="h" placeholder="H">
+                    <input type="number" min="0" max="100" value="0" data-model="hsv" data-channel="s" placeholder="S">
+                    <input type="number" min="0" max="100" value="100" data-model="hsv" data-channel="v" placeholder="V">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/converter.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Обработка изображений - Вариант 5</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Обработка цифровых изображений</h1>
+            <p class="subtitle">Вариант 5: Построение гистограммы + Эквализация + Линейное контрастирование</p>
+        </header>
+
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📁</div>
+                <h3>Загрузите изображение</h3>
+                <p>Перетащите файл сюда или нажмите для выбора</p>
+                <input type="file" id="fileInput" accept="image/*">
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <h3>Методы обработки</h3>
+                <div class="buttons">
+                    <button id="showHistogram">Построить гистограмму</button>
+                    <button id="equalizeHistogram">Эквализация гистограммы</button>
+                    <button id="linearContrast">Линейное контрастирование</button>
+                    <button id="equalizeRGB">Эквализация RGB</button>
+                    <button id="equalizeHSV">Эквализация HSV</button>
+                    <button id="resetImage">Сбросить</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Настройки линейного контрастирования</h3>
+                <div class="sliders">
+                    <label>Минимальная яркость: <span id="minBrightnessValue">0</span></label>
+                    <input type="range" id="minBrightness" min="0" max="255" value="0" class="slider">
+                    
+                    <label>Максимальная яркость: <span id="maxBrightnessValue">255</span></label>
+                    <input type="range" id="maxBrightness" min="0" max="255" value="255" class="slider">
+                </div>
+            </div>
+        </div>
+
+        <div class="results">
+            <div class="image-comparison">
+                <div class="image-container">
+                    <h3>Исходное изображение</h3>
+                    <canvas id="originalCanvas"></canvas>
+                    <div class="image-info" id="originalInfo"></div>
+                </div>
+                <div class="image-container">
+                    <h3>Обработанное изображение</h3>
+                    <canvas id="processedCanvas"></canvas>
+                    <div class="image-info" id="processedInfo"></div>
+                </div>
+            </div>
+
+            <div class="histogram-section">
+                <h3>Гистограмма яркости</h3>
+                <div class="histograms">
+                    <div class="histogram-container">
+                        <h4>Исходная гистограмма</h4>
+                        <canvas id="originalHistogram"></canvas>
+                    </div>
+                    <div class="histogram-container">
+                        <h4>Обработанная гистограмма</h4>
+                        <canvas id="processedHistogram"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="statistics">
+                <h3>Статистика изображения</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Размер:</span>
+                        <span class="stat-value" id="imageSize">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Средняя яркость:</span>
+                        <span class="stat-value" id="meanBrightness">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Стандартное отклонение:</span>
+                        <span class="stat-value" id="stdDeviation">-</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Энтропия:</span>
+                        <span class="stat-value" id="entropy">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-images">
+            <h3>Тестовые изображения</h3>
+            <div class="test-images-grid">
+                <div class="test-image" onclick="loadTestImage('images/low_contrast1.jpg')">
+                    <img src="images/low_contrast1.jpg" alt="Низкоконтрастное изображение 1">
+                    <p>Низкий контраст</p>
+                </div>
+                <div class="test-image" onclick="loadTestImage('images/low_contrast2.jpg')">
+                    <img src="images/low_contrast2.jpg" alt="Низкоконтрастное изображение 2">
+                    <p>Тёмное изображение</p>
+                </div>
+                <div class="test-image" onclick="loadTestImage('images/dark_image.jpg')">
+                    <img src="images/dark_image.jpg" alt="Тёмное изображение">
+                    <p>Яркое изображение</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Лабораторная работа №3 - Обработка цифровых изображений</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

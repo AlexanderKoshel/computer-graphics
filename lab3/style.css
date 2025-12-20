@@ -6,35 +6,35 @@
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background-color: #ffffff;
+    color: #333333;
     min-height: 100vh;
-    color: #333;
 }
 
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 30px 20px;
 }
 
 header {
     text-align: center;
-    margin-bottom: 30px;
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eaeaea;
 }
 
 h1 {
     color: #2c3e50;
-    font-size: 2.5em;
-    margin-bottom: 10px;
+    font-size: 2.2em;
+    margin-bottom: 8px;
+    font-weight: 600;
 }
 
 .subtitle {
     color: #7f8c8d;
-    font-size: 1.2em;
+    font-size: 1.1em;
+    font-weight: 400;
 }
 
 .upload-section {
@@ -42,17 +42,17 @@ h1 {
 }
 
 .upload-area {
-    background: white;
-    border: 3px dashed #3498db;
-    border-radius: 15px;
-    padding: 50px;
+    background: #f8f9fa;
+    border: 2px dashed #3498db;
+    border-radius: 12px;
+    padding: 40px 20px;
     text-align: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
 }
 
 .upload-area:hover {
-    background: #f8f9fa;
+    background: #f0f7ff;
     border-color: #2980b9;
 }
 
@@ -62,18 +62,20 @@ h1 {
 }
 
 .upload-icon {
-    font-size: 4em;
-    margin-bottom: 20px;
+    font-size: 3.5em;
+    margin-bottom: 15px;
+    color: #3498db;
 }
 
 .upload-area h3 {
     color: #2c3e50;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
+    font-size: 1.2em;
 }
 
 .upload-area p {
     color: #7f8c8d;
-    margin-bottom: 20px;
+    font-size: 0.95em;
 }
 
 #fileInput {
@@ -81,11 +83,11 @@ h1 {
 }
 
 .controls {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
+    padding: 25px;
+    border-radius: 12px;
     margin-bottom: 30px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border: 1px solid #eaeaea;
+    background-color: #ffffff;
 }
 
 .control-group {
@@ -95,32 +97,36 @@ h1 {
 .control-group h3 {
     color: #2c3e50;
     margin-bottom: 15px;
-    border-bottom: 2px solid #ecf0f1;
     padding-bottom: 10px;
+    border-bottom: 1px solid #ecf0f1;
+    font-size: 1.3em;
+    font-weight: 600;
 }
 
 .buttons {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 12px;
+    margin-bottom: 15px;
 }
 
 button {
-    background: linear-gradient(135deg, #3498db, #2980b9);
+    background: #3498db;
     color: white;
     border: none;
-    padding: 15px 25px;
+    padding: 14px 20px;
     border-radius: 8px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 button:hover {
+    background: #2980b9;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
 }
 
 button:active {
@@ -136,49 +142,65 @@ button:disabled {
 
 .sliders {
     display: grid;
-    gap: 20px;
+    gap: 18px;
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.slider-group label {
+    color: #2c3e50;
+    font-weight: 500;
+    font-size: 0.95em;
 }
 
 .slider {
     width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background: #ecf0f1;
+    height: 6px;
+    border-radius: 3px;
+    background: #e0e0e0;
     outline: none;
     -webkit-appearance: none;
+    margin: 10px 0;
 }
 
 .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: #3498db;
     cursor: pointer;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .slider::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     background: #3498db;
     cursor: pointer;
-    border: none;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .results {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    padding: 25px;
+    border-radius: 12px;
     margin-bottom: 30px;
+    border: 1px solid #eaeaea;
+    background-color: #ffffff;
 }
 
 .image-comparison {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-bottom: 40px;
+    gap: 25px;
+    margin-bottom: 35px;
 }
 
 .image-container {
@@ -188,36 +210,34 @@ button:disabled {
 .image-container h3 {
     color: #2c3e50;
     margin-bottom: 15px;
+    font-size: 1.2em;
+    font-weight: 600;
 }
 
 canvas {
     max-width: 100%;
-    border: 2px solid #ecf0f1;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    background: #f8f9fa;
-}
-
-.image-info {
-    margin-top: 10px;
-    color: #7f8c8d;
-    font-size: 0.9em;
+    border-radius: 8px;
+    background: #f8f9fa !important;
+    display: block;
+    margin: 0 auto;
 }
 
 .histogram-section {
-    margin-bottom: 40px;
+    margin-bottom: 35px;
 }
 
 .histogram-section h3 {
     color: #2c3e50;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
 }
 
 .histograms {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 30px;
+    gap: 25px;
 }
 
 .histogram-container {
@@ -227,107 +247,65 @@ canvas {
 .histogram-container h4 {
     color: #34495e;
     margin-bottom: 15px;
+    font-size: 1.1em;
+    font-weight: 500;
 }
 
 .histogram-container canvas {
-    background: #f8f9fa;
-    border: 1px solid #bdc3c7;
+    background: #f8f9fa !important;
+    border: 1px solid #e0e0e0;
 }
 
 .statistics {
-    background: #f8f9fa;
-    padding: 25px;
+    padding: 20px;
     border-radius: 10px;
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
 }
 
 .statistics h3 {
     color: #2c3e50;
     margin-bottom: 20px;
     text-align: center;
+    font-size: 1.3em;
+    font-weight: 600;
 }
 
 .stats-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 15px;
+    gap: 12px;
 }
 
 .stat-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 12px;
+    padding: 12px 15px;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
 }
 
 .stat-label {
-    font-weight: 600;
+    font-weight: 500;
     color: #2c3e50;
+    font-size: 0.95em;
 }
 
 .stat-value {
-    color: #e74c3c;
-    font-weight: 700;
-}
-
-.test-images {
-    background: white;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-}
-
-.test-images h3 {
-    color: #2c3e50;
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.test-images-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 20px;
-}
-
-.test-image {
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-    border: 2px solid transparent;
-    border-radius: 10px;
-    padding: 10px;
-}
-
-.test-image:hover {
-    transform: translateY(-5px);
-    border-color: #3498db;
-}
-
-.test-image img {
-    width: 100%;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 10px;
-}
-
-.test-image p {
-    color: #2c3e50;
+    color: #3498db;
     font-weight: 600;
+    font-size: 1em;
 }
 
-footer {
+.footer {
     text-align: center;
-    margin-top: 30px;
-    color: white;
-    padding: 20px;
-}
-
-footer p {
-    opacity: 0.8;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #eaeaea;
+    color: #7f8c8d;
+    font-size: 0.9em;
 }
 
 @media (max-width: 768px) {
@@ -344,14 +322,14 @@ footer p {
     }
     
     h1 {
-        font-size: 2em;
+        font-size: 1.8em;
     }
     
     .container {
-        padding: 10px;
+        padding: 15px;
     }
     
-    .test-images-grid {
-        grid-template-columns: 1fr;
+    .upload-area {
+        padding: 30px 15px;
     }
 }

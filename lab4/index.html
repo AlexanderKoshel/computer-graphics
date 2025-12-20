@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа 4: Базовые растровые алгоритмы</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/grid.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Шапка приложения -->
+        <header class="app-header">
+            <h1>Лабораторная работа 4</h1>
+            <h2>Базовые растровые алгоритмы</h2>
+            <p class="subtitle">Визуализация работы алгоритмов растеризации отрезков и окружностей</p>
+        </header>
+
+        <div class="main-content">
+            <!-- Левая панель: Управление -->
+            <div class="control-panel">
+                <div class="control-section">
+                    <h3><span class="icon">⚙️</span> Выбор алгоритма</h3>
+                    <div class="algorithm-selector">
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="algorithm" value="stepByStep" checked>
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <span class="algorithm-name">Пошаговый алгоритм</span>
+                                    <span class="algorithm-desc">Простой DDA-подобный</span>
+                                </span>
+                            </label>
+                            
+                            <label class="radio-option">
+                                <input type="radio" name="algorithm" value="dda">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <span class="algorithm-name">Алгоритм ЦДА</span>
+                                    <span class="algorithm-desc">Цифровой дифференциальный анализатор</span>
+                                </span>
+                            </label>
+                            
+                            <label class="radio-option">
+                                <input type="radio" name="algorithm" value="bresenhamLine">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <span class="algorithm-name">Алгоритм Брезенхема</span>
+                                    <span class="algorithm-desc">Для отрезков (целочисленный)</span>
+                                </span>
+                            </label>
+                            
+                            <label class="radio-option">
+                                <input type="radio" name="algorithm" value="bresenhamCircle">
+                                <span class="radio-custom"></span>
+                                <span class="radio-label">
+                                    <span class="algorithm-name">Алгоритм Брезенхема</span>
+                                    <span class="algorithm-desc">Для окружностей</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><span class="icon">📐</span> Параметры рисования</h3>
+                    
+                    <div class="input-group line-params">
+                        <div class="input-row">
+                            <label for="x1">X1:</label>
+                            <input type="number" id="x1" value="2" min="0" max="100">
+                            <label for="y1">Y1:</label>
+                            <input type="number" id="y1" value="3" min="0" max="100">
+                        </div>
+                        <div class="input-row">
+                            <label for="x2">X2:</label>
+                            <input type="number" id="x2" value="12" min="0" max="100">
+                            <label for="y2">Y2:</label>
+                            <input type="number" id="y2" value="8" min="0" max="100">
+                        </div>
+                    </div>
+                    
+                    <div class="input-group circle-params" style="display: none;">
+                        <div class="input-row">
+                            <label for="cx">Центр X:</label>
+                            <input type="number" id="cx" value="15" min="0" max="100">
+                            <label for="cy">Центр Y:</label>
+                            <input type="number" id="cy" value="15" min="0" max="100">
+                        </div>
+                        <div class="input-row">
+                            <label for="radius">Радиус:</label>
+                            <input type="number" id="radius" value="10" min="1" max="50">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><span class="icon">🎮</span> Управление</h3>
+                    <div class="button-group">
+                        <button id="drawBtn" class="btn primary">
+                            <span class="btn-icon">▶️</span> Нарисовать
+                        </button>
+                        <button id="stepBtn" class="btn secondary">
+                            <span class="btn-icon">⏭️</span> Пошагово
+                        </button>
+                        <button id="clearBtn" class="btn danger">
+                            <span class="btn-icon">🗑️</span> Очистить
+                        </button>
+                        <button id="testBtn" class="btn info">
+                            <span class="btn-icon">🧪</span> Тестовый пример
+                        </button>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><span class="icon">⚡</span> Настройки отображения</h3>
+                    
+                    <div class="slider-group">
+                        <label for="scaleSlider">
+                            Масштаб: <span id="scaleValue">1.0</span>x
+                        </label>
+                        <input type="range" id="scaleSlider" min="0.5" max="3" step="0.1" value="1.0">
+                    </div>
+                    
+                    <div class="toggle-group">
+                        <label class="toggle-option">
+                            <input type="checkbox" id="showGrid" checked>
+                            <span class="toggle-switch"></span>
+                            <span>Показать сетку</span>
+                        </label>
+                        
+                        <label class="toggle-option">
+                            <input type="checkbox" id="showAxes" checked>
+                            <span class="toggle-switch"></span>
+                            <span>Показать оси</span>
+                        </label>
+                        
+                        <label class="toggle-option">
+                            <input type="checkbox" id="showCalculations" checked>
+                            <span class="toggle-switch"></span>
+                            <span>Показать вычисления</span>
+                        </label>
+                        
+                        <label class="toggle-option">
+                            <input type="checkbox" id="showStepByStep">
+                            <span class="toggle-switch"></span>
+                            <span>Пошаговая анимация</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="control-section">
+                    <h3><span class="icon">⏱️</span> Производительность</h3>
+                    <div class="performance-info">
+                        <div class="performance-item">
+                            <span class="perf-label">Время выполнения:</span>
+                            <span id="executionTime" class="perf-value">0 мс</span>
+                        </div>
+                        <div class="performance-item">
+                            <span class="perf-label">Количество точек:</span>
+                            <span id="pointsCount" class="perf-value">0</span>
+                        </div>
+                        <button id="compareBtn" class="btn secondary small">
+                            Сравнить алгоритмы
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Центральная область: Визуализация -->
+            <div class="visualization-area">
+                <div class="canvas-container">
+                    <div class="canvas-header">
+                        <h3><span class="icon">🎨</span> Визуализация алгоритма</h3>
+                        <div class="legend">
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #FF6B6B;"></span>
+                                <span>Пошаговый алгоритм</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #4ECDC4;"></span>
+                                <span>Алгоритм ЦДА</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #45B7D1;"></span>
+                                <span>Брезенхема (отрезки)</span>
+                            </div>
+                            <div class="legend-item">
+                                <span class="legend-color" style="background-color: #96CEB4;"></span>
+                                <span>Брезенхема (окружности)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="canvas-wrapper">
+                        <canvas id="mainCanvas" width="800" height="600"></canvas>
+                        <div class="canvas-overlay" id="coordinatesOverlay">
+                            Координаты: (0, 0)
+                        </div>
+                    </div>
+                    
+                    <div class="canvas-footer">
+                        <div class="grid-info">
+                            <span class="icon">📊</span>
+                            Сетка: 10×10 пикселей | Масштаб: <span id="currentScale">1.0</span>
+                        </div>
+                        <div class="current-algorithm">
+                            <span class="icon">📝</span>
+                            Текущий алгоритм: <span id="currentAlgorithm">Пошаговый</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="step-controls" id="stepControls" style="display: none;">
+                    <div class="step-info">
+                        <span>Шаг: <span id="currentStep">0</span> из <span id="totalSteps">0</span></span>
+                        <span id="stepDescription">Начальная точка</span>
+                    </div>
+                    <div class="step-buttons">
+                        <button id="prevStep" class="btn secondary small">
+                            <span class="btn-icon">⏮️</span> Назад
+                        </button>
+                        <button id="nextStep" class="btn primary small">
+                            <span class="btn-icon">⏭️</span> Вперед
+                        </button>
+                        <button id="resetStep" class="btn danger small">
+                            <span class="btn-icon">🔄</span> С начала
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Правая панель: Информация и вычисления -->
+            <div class="info-panel">
+                <div class="info-section">
+                    <h3><span class="icon">📚</span> Описание алгоритма</h3>
+                    <div class="algorithm-info" id="algorithmInfo">
+                        <h4 id="algorithmName">Пошаговый алгоритм</h4>
+                        <p id="algorithmDescription">Простейший алгоритм с равномерным шагом по большей оси</p>
+                        
+                        <div class="formula-box">
+                            <div class="formula-title">Формула:</div>
+                            <code id="algorithmFormula">X(i+1) = X(i) + ΔX/steps<br>Y(i+1) = Y(i) + ΔY/steps</code>
+                        </div>
+                        
+                        <div class="properties">
+                            <div class="property">
+                                <span class="prop-name">Сложность:</span>
+                                <span class="prop-value" id="algorithmComplexity">O(max(|Δx|, |Δy|))</span>
+                            </div>
+                            <div class="property">
+                                <span class="prop-name">Преимущества:</span>
+                                <span class="prop-value" id="algorithmAdvantages">Простота реализации</span>
+                            </div>
+                            <div class="property">
+                                <span class="prop-name">Недостатки:</span>
+                                <span class="prop-value" id="algorithmDisadvantages">Использует операции с плавающей точкой</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3><span class="icon">🧮</span> Пошаговые вычисления</h3>
+                    <div class="calculations-container">
+                        <div class="calculations-header">
+                            <button id="toggleCalculations" class="btn secondary small">
+                                <span class="btn-icon">📋</span> Развернуть все
+                            </button>
+                            <button id="copyCalculations" class="btn secondary small">
+                                <span class="btn-icon">📄</span> Копировать
+                            </button>
+                        </div>
+                        <div class="calculations-list" id="calculationsList">
+                            <div class="calculation-item">
+                                <span class="calc-step">0.</span>
+                                <span class="calc-text">Выберите алгоритм и нажмите "Нарисовать"</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3><span class="icon">📈</span> Сравнение алгоритмов</h3>
+                    <div class="comparison-container">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Алгоритм</th>
+                                    <th>Время (мс)</th>
+                                    <th>Точки</th>
+                                    <th>Эффективность</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparisonTable">
+                                <tr>
+                                    <td>Пошаговый</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>ЦДА</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Брезенхема (линия)</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                                <tr>
+                                    <td>Брезенхема (окружность)</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="comparison-notes">
+                            <p><strong>Примечание:</strong> Время выполнения может незначительно отличаться в зависимости от браузера и нагрузки системы.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <h3><span class="icon">💡</span> Подсказки</h3>
+                    <div class="hints-container">
+                        <div class="hint">
+                            <span class="hint-icon">🎯</span>
+                            <span class="hint-text">Кликните на canvas для просмотра координат точки</span>
+                        </div>
+                        <div class="hint">
+                            <span class="hint-icon">⚡</span>
+                            <span class="hint-text">Используйте "Пошагово" для детального изучения алгоритма</span>
+                        </div>
+                        <div class="hint">
+                            <span class="hint-icon">📊</span>
+                            <span class="hint-text">"Сравнить алгоритмы" покажет их относительную производительность</span>
+                        </div>
+                        <div class="hint">
+                            <span class="hint-icon">🖱️</span>
+                            <span class="hint-text">Перетащите слайдер масштаба для увеличения/уменьшения</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Футер -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <span class="footer-text">Лабораторная работа №4</span>
+                    <span class="footer-separator">•</span>
+                    <span class="footer-text">Базовые растровые алгоритмы</span>
+                    <span class="footer-separator">•</span>
+                    <span class="footer-text">Кошель Александр, группа 13</span>
+                </div>
+                <div class="footer-stats">
+                    <span class="stat">
+                        <span class="stat-icon">🖥️</span>
+                        Canvas: 800×600
+                    </span>
+                    <span class="stat">
+                        <span class="stat-icon">📏</span>
+                        Сетка: 10px
+                    </span>
+                    <span class="stat">
+                        <span class="stat-icon">🎨</span>
+                        Алгоритмы: 4
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- JavaScript файлы -->
+    <script src="js/algorithms.js"></script>
+    <script src="js/canvas-manager.js"></script>
+    <script src="js/ui-controls.js"></script>
+    <script src="js/performance.js"></script>
+    <script src="js/step-by-step.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

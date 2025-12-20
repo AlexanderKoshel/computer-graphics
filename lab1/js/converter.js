@@ -31,9 +31,7 @@ class ColorConverter {
             });
         });
         
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            this.handleColorPickerChange(e);
-        });
+        document.getElementById('colorPicker').addEventListener('input', this.handleColorPickerChange);
     }
 
     handleInputChange(event) {

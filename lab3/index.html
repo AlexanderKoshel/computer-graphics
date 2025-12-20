@@ -10,7 +10,7 @@
     <div class="container">
         <header>
             <h1>Обработка цифровых изображений</h1>
-            <p class="subtitle">Вариант 5: Построение гистограммы + Эквализация + Линейное контрастирование</p>
+            <p class="subtitle">Вариант 5: Построение гистограммы + Эквализация + Линейное контрастирование + Нелинейные фильтры</p>
         </header>
 
         <div class="upload-section">
@@ -24,13 +24,24 @@
 
         <div class="controls">
             <div class="control-group">
-                <h3>Методы обработки</h3>
+                <h3>Методы обработки гистограммы</h3>
                 <div class="buttons">
                     <button id="showHistogram">Построить гистограмму</button>
                     <button id="equalizeHistogram">Эквализация гистограммы</button>
                     <button id="linearContrast">Линейное контрастирование</button>
                     <button id="equalizeRGB">Эквализация RGB</button>
                     <button id="equalizeHSV">Эквализация HSV</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Нелинейные фильтры (порядковые статистики)</h3>
+                <div class="buttons">
+                    <button id="medianFilter">Медианный фильтр</button>
+                    <button id="minFilter">Минимальный фильтр</button>
+                    <button id="maxFilter">Максимальный фильтр</button>
+                    <button id="midpointFilter">Фильтр средней точки</button>
+                    <button id="alphaTrimmedFilter">Альфа-усечённое среднее</button>
                     <button id="resetImage">Сбросить</button>
                 </div>
             </div>
@@ -38,11 +49,30 @@
             <div class="control-group">
                 <h3>Настройки линейного контрастирования</h3>
                 <div class="sliders">
-                    <label>Минимальная яркость: <span id="minBrightnessValue">0</span></label>
-                    <input type="range" id="minBrightness" min="0" max="255" value="0" class="slider">
+                    <div class="slider-group">
+                        <label>Минимальная яркость: <span id="minBrightnessValue">0</span></label>
+                        <input type="range" id="minBrightness" min="0" max="255" value="0" class="slider">
+                    </div>
                     
-                    <label>Максимальная яркость: <span id="maxBrightnessValue">255</span></label>
-                    <input type="range" id="maxBrightness" min="0" max="255" value="255" class="slider">
+                    <div class="slider-group">
+                        <label>Максимальная яркость: <span id="maxBrightnessValue">255</span></label>
+                        <input type="range" id="maxBrightness" min="0" max="255" value="255" class="slider">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3>Настройки нелинейных фильтров</h3>
+                <div class="sliders">
+                    <div class="slider-group">
+                        <label>Размер окна: <span id="windowSizeValue">3</span></label>
+                        <input type="range" id="windowSize" min="3" max="7" value="3" step="2" class="slider">
+                    </div>
+                    
+                    <div class="slider-group">
+                        <label>Альфа (для усечённого среднего): <span id="alphaValue">1</span></label>
+                        <input type="range" id="alpha" min="1" max="10" value="1" class="slider">
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,12 +82,10 @@
                 <div class="image-container">
                     <h3>Исходное изображение</h3>
                     <canvas id="originalCanvas"></canvas>
-                    <div class="image-info" id="originalInfo"></div>
                 </div>
                 <div class="image-container">
                     <h3>Обработанное изображение</h3>
                     <canvas id="processedCanvas"></canvas>
-                    <div class="image-info" id="processedInfo"></div>
                 </div>
             </div>
 
@@ -98,27 +126,9 @@
             </div>
         </div>
 
-        <div class="test-images">
-            <h3>Тестовые изображения</h3>
-            <div class="test-images-grid">
-                <div class="test-image" onclick="loadTestImage('images/low_contrast1.jpg')">
-                    <img src="images/low_contrast1.jpg" alt="Низкоконтрастное изображение 1">
-                    <p>Низкий контраст</p>
-                </div>
-                <div class="test-image" onclick="loadTestImage('images/low_contrast2.jpg')">
-                    <img src="images/low_contrast2.jpg" alt="Низкоконтрастное изображение 2">
-                    <p>Тёмное изображение</p>
-                </div>
-                <div class="test-image" onclick="loadTestImage('images/dark_image.jpg')">
-                    <img src="images/dark_image.jpg" alt="Тёмное изображение">
-                    <p>Яркое изображение</p>
-                </div>
-            </div>
+        <div class="footer">
+            <p>Лабораторная работа №3 - Обработка цифровых изображений. Нелинейные фильтры на основе порядковых статистик</p>
         </div>
-
-        <footer>
-            <p>Лабораторная работа №3 - Обработка цифровых изображений</p>
-        </footer>
     </div>
 
     <script src="script.js"></script>

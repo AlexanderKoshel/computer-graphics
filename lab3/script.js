@@ -27,6 +27,11 @@ class ImageProcessor {
         this.maxBrightness = document.getElementById('maxBrightness');
         this.minBrightnessValue = document.getElementById('minBrightnessValue');
         this.maxBrightnessValue = document.getElementById('maxBrightnessValue');
+        
+        this.windowSize = document.getElementById('windowSize');
+        this.windowSizeValue = document.getElementById('windowSizeValue');
+        this.alpha = document.getElementById('alpha');
+        this.alphaValue = document.getElementById('alphaValue');
     }
 
     setupEventListeners() {
@@ -35,11 +40,19 @@ class ImageProcessor {
         this.uploadArea.addEventListener('drop', (e) => this.handleDrop(e));
         this.fileInput.addEventListener('change', (e) => this.handleFileSelect(e));
 
+        // Гистограммные методы
         document.getElementById('showHistogram').addEventListener('click', () => this.showHistogram());
         document.getElementById('equalizeHistogram').addEventListener('click', () => this.equalizeHistogram());
         document.getElementById('linearContrast').addEventListener('click', () => this.linearContrast());
         document.getElementById('equalizeRGB').addEventListener('click', () => this.equalizeRGB());
         document.getElementById('equalizeHSV').addEventListener('click', () => this.equalizeHSV());
+        
+        // Нелинейные фильтры
+        document.getElementById('medianFilter').addEventListener('click', () => this.applyMedianFilter());
+        document.getElementById('minFilter').addEventListener('click', () => this.applyMinFilter());
+        document.getElementById('maxFilter').addEventListener('click', () => this.applyMaxFilter());
+        document.getElementById('midpointFilter').addEventListener('click', () => this.applyMidpointFilter());
+        document.getElementById('alphaTrimmedFilter').addEventListener('click', () => this.applyAlphaTrimmedFilter());
         document.getElementById('resetImage').addEventListener('click', () => this.resetImage());
 
         this.minBrightness.addEventListener('input', () => {
@@ -49,32 +62,37 @@ class ImageProcessor {
         this.maxBrightness.addEventListener('input', () => {
             this.maxBrightnessValue.textContent = this.maxBrightness.value;
         });
+
+        this.windowSize.addEventListener('input', () => {
+            this.windowSizeValue.textContent = this.windowSize.value;
+        });
+
+        this.alpha.addEventListener('input', () => {
+            this.alphaValue.textContent = this.alpha.value;
+        });
     }
 
     setupCanvases() {
-        this.originalCanvas.width = 400;
-        this.originalCanvas.height = 300;
-        this.processedCanvas.width = 400;
-        this.processedCanvas.height = 300;
+        this.originalCanvas.width = 500;
+        this.originalCanvas.height = 400;
+        this.processedCanvas.width = 500;
+        this.processedCanvas.height = 400;
         
-        this.originalHistogramCanvas.width = 400;
-        this.originalHistogramCanvas.height = 200;
-        this.processedHistogramCanvas.width = 400;
-        this.processedHistogramCanvas.height = 200;
+        this.originalHistogramCanvas.width = 450;
+        this.originalHistogramCanvas.height = 180;
+        this.processedHistogramCanvas.width = 450;
+        this.processedHistogramCanvas.height = 180;
 
         this.clearCanvases();
     }
 
     clearCanvases() {
-        this.originalCtx.fillStyle = '#f8f9fa';
-        this.originalCtx.fillRect(0, 0, this.originalCanvas.width, this.originalCanvas.height);
-        this.processedCtx.fillStyle = '#f8f9fa';
-        this.processedCtx.fillRect(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        // Исправлено: используем прозрачный фон вместо белого
+        this.originalCtx.clearRect(0, 0, this.originalCanvas.width, this.originalCanvas.height);
+        this.processedCtx.clearRect(0, 0, this.processedCanvas.width, this.processedCanvas.height);
         
-        this.originalHistogramCtx.fillStyle = '#f8f9fa';
-        this.originalHistogramCtx.fillRect(0, 0, this.originalHistogramCanvas.width, this.originalHistogramCanvas.height);
-        this.processedHistogramCtx.fillStyle = '#f8f9fa';
-        this.processedHistogramCtx.fillRect(0, 0, this.processedHistogramCanvas.width, this.processedHistogramCanvas.height);
+        this.originalHistogramCtx.clearRect(0, 0, this.originalHistogramCanvas.width, this.originalHistogramCanvas.height);
+        this.processedHistogramCtx.clearRect(0, 0, this.processedHistogramCanvas.width, this.processedHistogramCanvas.height);
     }
 
     handleDragOver(e) {
@@ -121,24 +139,6 @@ class ImageProcessor {
             alert('Ошибка чтения файла');
         };
         reader.readAsDataURL(file);
-    }
-
-    loadTestImage(src) {
-        const img = new Image();
-        img.onload = () => {
-            this.originalImage = img;
-            this.processedImage = new Image();
-            this.processedImage.src = img.src;
-            
-            this.drawImages();
-            this.updateStatistics();
-            this.calculateHistograms();
-            this.drawHistograms();
-        };
-        img.onerror = () => {
-            alert('Ошибка загрузки тестового изображения: ' + src);
-        };
-        img.src = src;
     }
 
     drawImages() {
@@ -211,7 +211,7 @@ class ImageProcessor {
         }
         
         ctx.strokeStyle = '#2c3e50';
-        ctx.lineWidth = 2;
+        ctx.lineWidth = 1;
         ctx.strokeRect(0, 0, width, height);
     }
 
@@ -408,24 +408,15 @@ class ImageProcessor {
         const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
         const data = imageData.data;
         
-        // НАЧАЛО ИСПРАВЛЕННОГО АЛГОРИТМА ЛИНЕЙНОГО КОНТРАСТИРОВАНИЯ
-        
-        // Формула линейного контрастирования:
-        // newValue = ((oldValue - minInput) / (maxInput - minInput)) * 255
-        
         for (let i = 0; i < data.length; i += 4) {
-            // Обрабатываем каждый цветовой канал отдельно
             const r = data[i];
             const g = data[i + 1];
             const b = data[i + 2];
             
-            // Применяем линейное преобразование к каждому каналу
             data[i] = this.linearTransform(r, minInput, maxInput);
             data[i + 1] = this.linearTransform(g, minInput, maxInput);
             data[i + 2] = this.linearTransform(b, minInput, maxInput);
         }
-        
-        // КОНЕЦ ИСПРАВЛЕННОГО АЛГОРИТМА
         
         this.processedCtx.putImageData(imageData, 0, 0);
         this.calculateHistograms();
@@ -433,26 +424,196 @@ class ImageProcessor {
         this.updateStatistics();
     }
 
-    /**
-     * Функция линейного преобразования яркости
-     * @param {number} value - исходное значение (0-255)
-     * @param {number} minInput - минимальная граница входного диапазона
-     * @param {number} maxInput - максимальная граница входного диапазона
-     * @returns {number} - преобразованное значение (0-255)
-     */
     linearTransform(value, minInput, maxInput) {
-        // Если значение ниже минимальной границы - устанавливаем в 0
         if (value <= minInput) {
             return 0;
-        }
-        // Если значение выше максимальной границы - устанавливаем в 255
-        else if (value >= maxInput) {
+        } else if (value >= maxInput) {
             return 255;
-        }
-        // Линейное преобразование значений в диапазоне [minInput, maxInput] -> [0, 255]
-        else {
+        } else {
             return Math.round(((value - minInput) / (maxInput - minInput)) * 255);
         }
+    }
+
+    // НЕЛИНЕЙНЫЕ ФИЛЬТРЫ НА ОСНОВЕ ПОРЯДКОВЫХ СТАТИСТИК
+    
+    applyMedianFilter() {
+        if (!this.originalImage) {
+            alert('Сначала загрузите изображение');
+            return;
+        }
+        
+        const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        const processedData = this.applyNonLinearFilter(imageData, 'median');
+        this.processedCtx.putImageData(processedData, 0, 0);
+        
+        this.calculateHistograms();
+        this.drawHistograms();
+        this.updateStatistics();
+    }
+
+    applyMinFilter() {
+        if (!this.originalImage) {
+            alert('Сначала загрузите изображение');
+            return;
+        }
+        
+        const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        const processedData = this.applyNonLinearFilter(imageData, 'min');
+        this.processedCtx.putImageData(processedData, 0, 0);
+        
+        this.calculateHistograms();
+        this.drawHistograms();
+        this.updateStatistics();
+    }
+
+    applyMaxFilter() {
+        if (!this.originalImage) {
+            alert('Сначала загрузите изображение');
+            return;
+        }
+        
+        const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        const processedData = this.applyNonLinearFilter(imageData, 'max');
+        this.processedCtx.putImageData(processedData, 0, 0);
+        
+        this.calculateHistograms();
+        this.drawHistograms();
+        this.updateStatistics();
+    }
+
+    applyMidpointFilter() {
+        if (!this.originalImage) {
+            alert('Сначала загрузите изображение');
+            return;
+        }
+        
+        const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        const processedData = this.applyNonLinearFilter(imageData, 'midpoint');
+        this.processedCtx.putImageData(processedData, 0, 0);
+        
+        this.calculateHistograms();
+        this.drawHistograms();
+        this.updateStatistics();
+    }
+
+    applyAlphaTrimmedFilter() {
+        if (!this.originalImage) {
+            alert('Сначала загрузите изображение');
+            return;
+        }
+        
+        const imageData = this.processedCtx.getImageData(0, 0, this.processedCanvas.width, this.processedCanvas.height);
+        const processedData = this.applyNonLinearFilter(imageData, 'alphaTrimmed');
+        this.processedCtx.putImageData(processedData, 0, 0);
+        
+        this.calculateHistograms();
+        this.drawHistograms();
+        this.updateStatistics();
+    }
+
+    applyNonLinearFilter(imageData, filterType) {
+        const width = imageData.width;
+        const height = imageData.height;
+        const data = imageData.data;
+        const result = new ImageData(width, height);
+        const resultData = result.data;
+        
+        const windowSize = parseInt(this.windowSize.value);
+        const halfWindow = Math.floor(windowSize / 2);
+        const alpha = parseInt(this.alpha.value);
+        
+        // Копируем исходные данные
+        for (let i = 0; i < data.length; i++) {
+            resultData[i] = data[i];
+        }
+        
+        // Обрабатываем каждый пиксель (кроме границ)
+        for (let y = halfWindow; y < height - halfWindow; y++) {
+            for (let x = halfWindow; x < width - halfWindow; x++) {
+                const index = (y * width + x) * 4;
+                
+                // Собираем значения из окрестности для каждого канала
+                const rValues = [];
+                const gValues = [];
+                const bValues = [];
+                
+                for (let wy = -halfWindow; wy <= halfWindow; wy++) {
+                    for (let wx = -halfWindow; wx <= halfWindow; wx++) {
+                        const neighborIndex = ((y + wy) * width + (x + wx)) * 4;
+                        rValues.push(data[neighborIndex]);
+                        gValues.push(data[neighborIndex + 1]);
+                        bValues.push(data[neighborIndex + 2]);
+                    }
+                }
+                
+                // Применяем выбранный фильтр к каждому каналу
+                switch(filterType) {
+                    case 'median':
+                        resultData[index] = this.getMedian(rValues);
+                        resultData[index + 1] = this.getMedian(gValues);
+                        resultData[index + 2] = this.getMedian(bValues);
+                        break;
+                        
+                    case 'min':
+                        resultData[index] = Math.min(...rValues);
+                        resultData[index + 1] = Math.min(...gValues);
+                        resultData[index + 2] = Math.min(...bValues);
+                        break;
+                        
+                    case 'max':
+                        resultData[index] = Math.max(...rValues);
+                        resultData[index + 1] = Math.max(...gValues);
+                        resultData[index + 2] = Math.max(...bValues);
+                        break;
+                        
+                    case 'midpoint':
+                        resultData[index] = this.getMidpoint(rValues);
+                        resultData[index + 1] = this.getMidpoint(gValues);
+                        resultData[index + 2] = this.getMidpoint(bValues);
+                        break;
+                        
+                    case 'alphaTrimmed':
+                        resultData[index] = this.getAlphaTrimmedMean(rValues, alpha);
+                        resultData[index + 1] = this.getAlphaTrimmedMean(gValues, alpha);
+                        resultData[index + 2] = this.getAlphaTrimmedMean(bValues, alpha);
+                        break;
+                }
+                
+                // Сохраняем альфа-канал
+                resultData[index + 3] = data[index + 3];
+            }
+        }
+        
+        return result;
+    }
+
+    getMedian(values) {
+        const sorted = [...values].sort((a, b) => a - b);
+        const mid = Math.floor(sorted.length / 2);
+        
+        if (sorted.length % 2 === 0) {
+            return Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+        } else {
+            return sorted[mid];
+        }
+    }
+
+    getMidpoint(values) {
+        const min = Math.min(...values);
+        const max = Math.max(...values);
+        return Math.round((min + max) / 2);
+    }
+
+    getAlphaTrimmedMean(values, alpha) {
+        const sorted = [...values].sort((a, b) => a - b);
+        const trimmed = sorted.slice(alpha, sorted.length - alpha);
+        
+        if (trimmed.length === 0) {
+            return values[0];
+        }
+        
+        const sum = trimmed.reduce((acc, val) => acc + val, 0);
+        return Math.round(sum / trimmed.length);
     }
 
     calculateCumulativeHistogram(histogram) {
@@ -506,13 +667,6 @@ class ImageProcessor {
             this.drawHistograms();
             this.updateStatistics();
         }
-    }
-}
-
-// Глобальная функция для загрузки тестовых изображений
-function loadTestImage(src) {
-    if (window.imageProcessor) {
-        window.imageProcessor.loadTestImage(src);
     }
 }
 
